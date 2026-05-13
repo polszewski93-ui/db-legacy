@@ -14,11 +14,11 @@ jobs:
           submodules: recursive
 
     - name: Setup MSBuild and add to PATH
-      uses: microsoft/setup-msbuild@v1.0.2
+      uses: microsoft/setup-msbuild@v2
       id: setup_msbuild
 
     - name: Run vcpkg
-      uses: lukka/run-vcpkg@v7
+      uses: lukka/run-vcpkg@v11
       with:
         vcpkgDirectory: ${{ runner.workspace }}/vcpkg/
         vcpkgTriplet: x86-windows-static
