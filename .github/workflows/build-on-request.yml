@@ -9,7 +9,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
           submodules: recursive
 
@@ -44,7 +44,7 @@ jobs:
         MSBuild /property:Configuration=OpenGL /p:BUILD_REVISION=${{github.run_number}}
 
     - name: Upload binaries
-      uses: 'actions/upload-artifact@v2'
+      uses: 'actions/upload-artifact@v4'
       with:
         name: Download-binaries
         path: |
