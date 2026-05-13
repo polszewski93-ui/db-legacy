@@ -27,27 +27,26 @@ jobs:
       uses: actions/cache@v4
       with:
         path: C:\vcpkg\installed
-        key: vcpkg-x86-static-v1
+        key: vcpkg-x86-static-v2
         restore-keys: vcpkg-x86-static-
 
     - name: Install vcpkg packages
       run: |
         C:\vcpkg\vcpkg install --triplet x86-windows-static boost-iostreams boost-asio boost-beast boost-system boost-variant boost-lockfree boost-process boost-program-options boost-uuid boost-filesystem luajit glew physfs openal-soft libogg libvorbis zlib libzip bzip2 openssl
-        C:\vcpkg\vcpkg integrate install
       shell: cmd
 
     - name: Compile otclient_dx
       timeout-minutes: 30
       run: |
         cd vc16
-        MSBuild /property:Configuration=DirectX /p:BUILD_REVISION=${{github.run_number}} /p:VcpkgRoot=C:\vcpkg
+        MSBuild /property:Configuration=DirectX /p:BUILD_REVISION=${{github.run_number}} /p:ForceImportBeforeCppTargets=C:\vcpkg\scripts\buildsystems\msbuild\vcpkg.props
       shell: cmd
 
     - name: Compile otclient_gl
       timeout-minutes: 30
       run: |
         cd vc16
-        MSBuild /property:Configuration=OpenGL /p:BUILD_REVISION=${{github.run_number}} /p:VcpkgRoot=C:\vcpkg
+        MSBuild /property:Configuration=OpenGL /p:BUILD_REVISION=${{github.run_number}} /p:ForceImportBeforeCppTargets=C:\vcpkg\scripts\buildsystems\msbuild\vcpkg.props
       shell: cmd
 
     - name: Upload binaries
