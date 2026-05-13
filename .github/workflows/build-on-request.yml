@@ -16,20 +16,25 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Clone vcpkg
+    - name: Setup vcpkg
       run: |
-        git clone https://github.com/microsoft/vcpkg.git C:\vcpkg
+        if not exist C:\vcpkg (
+          git clone https://github.com/microsoft/vcpkg.git C:\vcpkg
+        )
         cd C:\vcpkg
+        git fetch
         git checkout 3b3bd424827a1f7f4813216f6b32b6c61e386b2e
-        .\bootstrap-vcpkg.bat -disableMetrics
+        if not exist C:\vcpkg\vcpkg.exe (
+          .\bootstrap-vcpkg.bat -disableMetrics
+        )
       shell: cmd
 
     - name: Cache vcpkg packages
       uses: actions/cache@v4
       with:
         path: C:\vcpkg\installed
-        key: vcpkg-x86-windows-static-${{ hashFiles('**/settings.props') }}
-        restore-keys: vcpkg-x86-windows-static-
+        key: vcpkg-x86-${{ hashFiles('vc16/settings.props') }}
+        restore-keys: vcpkg-x86-
 
     - name: Install vcpkg packages
       run: |
