@@ -23,20 +23,19 @@ jobs:
 
     - name: Install dependencies
       run: |
-        ${{ env.VCPKG_ROOT }}/vcpkg install --triplet x86-windows-static boost-iostreams boost-asio boost-beast boost-system boost-variant boost-lockfree boost-process boost-program-options boost-uuid boost-filesystem luajit glew physfs openal-soft libogg libvorbis zlib libzip bzip2 openssl
-        ${{ env.VCPKG_ROOT }}/vcpkg integrate install
+        $env:VCPKG_ROOT/vcpkg install --triplet x86-windows-static boost-iostreams boost-asio boost-beast boost-system boost-variant boost-lockfree boost-process boost-program-options boost-uuid boost-filesystem luajit glew physfs openal-soft libogg libvorbis zlib libzip bzip2 openssl
 
     - name: Compile otclient_dx
       timeout-minutes: 30
       run: |
         cd vc16
-        MSBuild /property:Configuration=DirectX /p:BUILD_REVISION=${{github.run_number}}
+        MSBuild /property:Configuration=DirectX /p:BUILD_REVISION=${{github.run_number}} /p:VcpkgRoot="$env:VCPKG_ROOT" /p:ForceImportBeforeCppTargets="$env:VCPKG_ROOT/scripts/buildsystems/msbuild/vcpkg.props"
 
     - name: Compile otclient_gl
       timeout-minutes: 30
       run: |
         cd vc16
-        MSBuild /property:Configuration=OpenGL /p:BUILD_REVISION=${{github.run_number}}
+        MSBuild /property:Configuration=OpenGL /p:BUILD_REVISION=${{github.run_number}} /p:VcpkgRoot="$env:VCPKG_ROOT" /p:ForceImportBeforeCppTargets="$env:VCPKG_ROOT/scripts/buildsystems/msbuild/vcpkg.props"
 
     - name: Upload binaries
       uses: actions/upload-artifact@v4
