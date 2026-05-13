@@ -11,7 +11,7 @@ HotkeyListLabel < UILabel
 MainWindow
   id: hotkeysWindow
   !text: tr('Hotkeys')
-  size: 370 475
+  size: 370 500
 
   @onEnter: modules.game_hotkeys.ok()
   @onEscape: modules.game_hotkeys.cancel()
@@ -164,10 +164,10 @@ MainWindow
     margin-top: 2
     @onClick: modules.game_hotkeys.clearObject()
 
-  ButtonBox
+  Button
     id: useOnSelf
     !text: tr('Use on yourself')
-    width: 128
+    width: 64
     enabled: false
     anchors.left: selectObjectButton.right
     anchors.right: parent.right
@@ -175,10 +175,10 @@ MainWindow
     checked: false
     margin-left: 10
 
-  ButtonBox
+  Button
     id: useOnTarget
     !text: tr('Use on target')
-    width: 128
+    width: 64
     enabled: false
     anchors.left: prev.left
     anchors.right: parent.right
@@ -186,10 +186,10 @@ MainWindow
     checked: false
     margin-top: 2
 
-  ButtonBox
+  Button
     id: useWith
     !text: tr('With crosshair')
-    width: 128
+    width: 64
     enabled: false
     anchors.left: prev.left
     anchors.right: parent.right
@@ -258,6 +258,51 @@ HotkeyAssignWindow < MainWindow
     anchors.bottom: parent.bottom
     margin-right: 10
     @onClick: modules.game_hotkeys.hotkeyCaptureOk(self:getParent(), self:getParent():getChildById('comboPreview').keyCombo)
+
+  Button
+    id: cancelButton
+    !text: tr('Cancel')
+    width: 64
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    @onClick: self:getParent():destroy()
+
+HotkeyChangeWindow < MainWindow
+  id: changeWindow
+  !text: tr('Button Change')
+  size: 360 150
+  @onEscape: self:destroy()
+
+  Label
+    !text: tr('Please, press the new key you want have')
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: parent.top
+    text-auto-resize: true
+    text-align: center
+
+  Label
+    id: comboPreview
+    !text: tr('Current new hotkey: %s', 'none')
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.top: prev.bottom
+    margin-top: 10
+    text-auto-resize: true
+
+  HorizontalSeparator
+    id: separator
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: next.top
+    margin-bottom: 10
+
+  Button
+    id: addButton
+    !text: tr('Change')
+    width: 64
+    anchors.right: next.left
+    anchors.bottom: parent.bottom
+    margin-right: 10
 
   Button
     id: cancelButton

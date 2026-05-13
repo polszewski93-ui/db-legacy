@@ -1,0 +1,12 @@
+Panel
+  id: sampleWindow
+  anchors.fill: parent
+
+  Label
+    id: nameLabel
+    anchors.centerIn: parent
+    text-align: center
+    font: libelsuit-22px_cp1252
+    margin-bottom: 320
+    height: 40
+    text: ""

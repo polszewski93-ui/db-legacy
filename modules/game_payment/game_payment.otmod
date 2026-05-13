@@ -1,0 +1,7 @@
+Module
+  name: game_payment
+  scripts: [ game_payment, game_pix ]
+  sandboxed: true
+  autoload: true
+  @onLoad: init() pixInit()
+  @onUnload: terminate() pixTerminate()

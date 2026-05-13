@@ -1,0 +1,238 @@
+shop2Category < Panel
+  height: 36
+  focusable: true
+  background: alpha
+
+  $focus:
+    background: #99999999
+  
+  Label
+    id: name
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-left: 40
+    text-align: left
+    color: white
+    font: verdana-11px-rounded    
+    
+shop2CategoryItem < shop2Category
+  UIItem
+    id: item
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.bottom: parent.bottom
+    margin-top: 2
+    margin-bottom: 2
+    margin-left: 2
+    virtual: true
+    size: 32 32
+    
+shop2CategoryCreature < shop2Category
+  UICreature
+    id: creature
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.bottom: parent.bottom
+    margin-top: 2
+    margin-bottom: 2
+    margin-left: 2
+    size: 32 32
+    
+shop2CategoryImage < shop2Category
+  Label
+    id: image
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.bottom: parent.bottom
+    margin-top: 2
+    margin-bottom: 2
+    margin-left: 2
+    size: 32 32    
+    
+    
+    
+shop2Offer < Panel
+  height: 56
+  background: alpha
+  
+  $focus:
+    background: #99999999
+
+  Label
+    id: title
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: parent.top
+    margin-top: 4
+    margin-left: 55
+    text-align: topleft
+    color: white
+    font: verdana-11px-rounded
+
+  Label
+    id: description
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-left: 55
+    margin-right: 55
+    text-align: topleft
+    text-auto-resize: true
+    text-wrap: true
+    color: white
+    font: verdana-11px-rounded
+    
+  Button
+    id: buyButton2
+    text: Buy
+    height: 25
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.left: prev.right
+    anchors.right: parent.right    
+    margin-right: 15
+    text-align: center
+    
+shop2OfferItem < shop2Offer
+  UIItem
+    id: item
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.bottom: parent.bottom
+    margin-top: 4
+    margin-bottom: 4
+    margin-left: 2
+    virtual: true
+    size: 32 32
+    
+shop2OfferCreature < shop2Offer
+  UICreature
+    id: creature
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.bottom: parent.bottom
+    margin-top: 4
+    margin-bottom: 4
+    margin-left: 2
+    size: 48 48
+    
+shop2OfferImage < shop2Offer
+  Label
+    id: image
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.bottom: parent.bottom
+    margin-top: 4
+    margin-bottom: 4
+    margin-left: 2
+    size: 48 48    
+  
+MainWindow
+  id: shop2Window
+  image-source: images/hpgames
+  size: 750 500
+  @onEscape: modules.game_eventpoints.hide()
+  $mobile:
+    size: 500 360
+
+  Panel
+    id: infoPanel
+    anchors.top: parent.top
+    anchors.left: parent.left
+    width: 170
+    height: 100
+    margin-left: -10
+    
+    
+
+    Label
+      id: points2
+      color: blue
+      anchors.horizontalCenter: parent.horizontalCenter
+      anchors.top: parent.top
+      margin-top: 76
+      margin-left: -10
+      text: -
+      text-auto-resize: true
+
+
+    
+
+  Panel
+    id: adPanel
+    anchors.top: parent.top
+    anchors.left: infoPanel.right
+    anchors.right: parent.right
+    margin-left: 37
+    height: 0
+    margin-top: -25
+    
+    Label
+      id: ad
+      anchors.horizontalCenter: parent.horizontalCenter
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      text-auto-resize: true
+      text-wrap: true
+      text-align: center
+      font: sans-bold-16px
+  
+  TextList    
+    id: categories
+    vertical-scrollbar: categoriesScrollBar
+    anchors.top: infoPanel.bottom
+    anchors.left: infoPanel.left
+    anchors.right: infoPanel.right
+    anchors.bottom: transactionHistory.top
+    margin-top: 10
+    margin-bottom: 10
+    padding: 1
+    focusable: false
+
+  VerticalScrollBar
+    id: categoriesScrollBar
+    anchors.top: categories.top
+    anchors.bottom: categories.bottom
+    anchors.right: categories.right
+    step: 50
+    pixels-scroll: true
+
+  TextList
+    id: offers
+    vertical-scrollbar: offersScrollBar
+    anchors.top: adPanel.bottom
+    anchors.left: adPanel.left
+    anchors.right: adPanel.right
+    anchors.bottom: transactionHistory.top
+    margin-top: 10
+    margin-bottom: 10
+    padding: 1
+    focusable: false
+
+  VerticalScrollBar
+    id: offersScrollBar
+    anchors.top: offers.top
+    anchors.bottom: offers.bottom
+    anchors.right: offers.right
+    step: 50
+    pixels-scroll: true
+
+  Button
+    id: transactionHistory
+    !text: tr('History')
+    width: 128
+    margin-left: 200
+    anchors.left: parent.left
+    anchors.bottom: parent.bottom
+    @onClick: modules.game_eventpoints.showHistory()
+
+
+  Button
+    id: buttonCancel
+    !text: tr('Close')
+    width: 64
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    @onClick: modules.game_eventpoints.hide()

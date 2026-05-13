@@ -1,0 +1,144 @@
+
+
+MainMiniWindow < UIWindow
+  font: verdana-11px-antialised
+  icon-rect: 4 4 16 16
+  width: 192
+  height: 200
+  text-offset: 24 5
+  text-align: topLeft
+  image-source: base
+  image-border: 10
+  image-border-top: 18
+  focusable: false
+  &minimizedHeight: 24
+
+  $on:
+    image-border-bottom: 2
+
+  UIWidget
+    id: miniwindowTopBar
+    anchors.top: parent.top
+    anchors.right: parent.right
+    anchors.left: parent.left
+    margin-right: 3
+    margin-left: 3
+    margin-top: 3
+    size: 258 18
+    phantom: true
+
+  UIButton
+    id: closeButton
+    anchors.top: parent.top
+    anchors.right: parent.right
+    size: 24 17
+    image-source: closeButton
+
+  UIButton
+    id: minimizeButton
+    anchors.top: closeButton.top
+    anchors.right: closeButton.left
+    size: 24 17
+    image-source: minimizeButton
+
+  UIButton
+    id: lockButton
+    anchors.top: minimizeButton.top
+    anchors.right: minimizeButton.left
+    size: 24 17
+    image-source: lockButton
+
+  VerticalScrollBar
+    id: miniwindowScrollBar
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    step: 14
+    pixels-scroll: true
+
+    $!on:
+      width: 0
+
+SpellWidget < UIItem
+  height: 28
+  width: 28
+  margin-top: 2
+  background-color: black
+  text-wrap: true
+  text-offset: 2 1
+  image-source: item
+  border-color: white
+  
+  Label
+    id: keyComboLabel
+    anchors.fill: parent
+    text-align: bottom-center
+    text-offset: 0 2
+
+  UIProgressRect
+    id: cooldown
+    background: #585858AA
+    percent: 100
+    focusable: false
+    phantom: true
+    anchors.fill: parent
+    margin: 1 1 1 1
+    font: verdana-11px-rounded
+    color: white
+
+SpellAddButton < UIButton
+  height: 25
+  width: 25
+  margin-top: 2
+  background-color: black
+  text-wrap: true
+  font: cipsoftFont
+  image-source: add
+  border-color: white
+  
+  Label
+    id: keyComboLabel
+    anchors.fill: parent
+    font: cipsoftFont
+    color: white
+
+MainMiniWindow
+  id: hotkeyBar
+  height: 100
+
+  MiniWindowContents
+    Panel
+      id: hotkeyBarPanel
+      anchors.fill: parent
+      margin-right: 59
+      margin-left: 5
+      margin-top: 5
+      layout:
+        type: grid
+        cell-size: 28 28
+        cell-spacing: 17
+        num-columns: 5
+    SpellAddButton
+      id: hotkeyBarAdd
+      anchors.top: parent.top
+      anchors.right: parent.right
+      margin-right: 16
+      margin-top: 4
+      @onClick: modules.game_hotkeys.addHotkey()
+    UIButton
+      height: 11
+      width: 11
+      anchors.top: prev.top
+      anchors.left: prev.right
+      image-source: buttonUp
+      @onClick: modules.game_hotkeys.rowUp()
+      margin-top: 1
+      margin-left: 1
+    UIButton
+      height: 11
+      width: 11
+      anchors.top: prev.bottom
+      image-source: buttonDown
+      anchors.left: prev.left
+      margin-top: 1
+      @onClick: modules.game_hotkeys.rowDown()

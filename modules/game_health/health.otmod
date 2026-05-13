@@ -1,0 +1,11 @@
+Module
+  name: game_health_exhio
+  description: Displays health, mana points, soul points, and conditions
+  author: Luis
+  website: none
+  sandboxed: true
+  autoload: true
+  autoload-priority: 1000
+  scripts: [ health ]
+  @onLoad: init()
+  @onUnload: terminate()

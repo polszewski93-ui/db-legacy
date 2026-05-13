@@ -16,6 +16,9 @@ function setupExtraHotkeys(combobox)
       g_game.attack(nil)
     end
   end)
+  addExtraHotkey("Flash Step", "Flash Step", function()
+		g_game.talk("flash step")
+  end)
   addExtraHotkey("attackNext", "Attack next target from battle list", function(repeated)
     if repeated or not modules.game_battle then
       return

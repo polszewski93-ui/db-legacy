@@ -1,0 +1,9 @@
+Module
+  name: game_itemborders
+  description: Item Borders
+  author: Griss
+  website: None
+  security: jR$5p@9Qz!
+  autoload: true
+  sandboxed: true
+  scripts: [ itemborders ]

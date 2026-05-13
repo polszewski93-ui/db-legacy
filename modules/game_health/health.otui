@@ -1,0 +1,111 @@
+HealthBar < ProgressBar
+  background-color: #FF0000
+  size: 210 30
+  image-color: alpha
+  icon-align: right
+  icon-offset: 0 0
+  border-width: 0
+  margin: 1 0 0 80
+
+SoulBar < ProgressBar
+
+  
+
+  icon: img/soul
+  icon-align: right
+  icon-offset: 1 0
+  border-width: 0
+  margin: 7 0 0 32
+
+ManaBar < ProgressBar
+  background-color: #0000FF
+  size: 175 18
+  image-color: alpha
+  icon-align: right
+  icon-offset: 1 0
+  border-width: 0
+  margin: 1 0 0 80
+
+
+
+
+
+Slot < UIWidget
+  image-source: img/slot
+  font: terminus-10px
+  color: #e8c05e
+  margin-left: 2
+  icon-align: left
+
+
+
+  $!on:
+    visible: false
+    margin-top: 0
+    height: 0
+
+ConditionWidget < UIWidget
+  size: 20 20
+
+  $!first:
+    margin-left: 2
+
+HeadlessWindow
+  id: healthInfoWindow
+  size: 430 165
+  image-source: img/adv_healthinfo
+  anchors.horizontalCenter: parent.horizontalCenter
+  anchors.top: parent.top
+  margin-top: 2
+  margin-left: 0
+  focusable: false
+
+
+  Label
+    id: nameLabel
+    anchors.top: parent.top
+    anchors.left: parent.left
+    text-auto-resize: true
+    color: #FF0000
+    margin: 38 0 0 35
+
+  UICreature
+    id: outfitBox
+    size: 100 100
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin: 20 0 0 0
+
+  Slot
+    id: levelLabel
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    image-color: #4f707b
+    margin: 0 0 10 13
+
+  HealthBar
+    id: healthBar
+    anchors.top: nameLabel.bottom
+    anchors.left: outfitBox.right
+    margin-top: 0
+
+  Label
+    id: healthLabel
+    font: terminus-10px
+    anchors.top: prev.top
+    anchors.left: prev.right
+    margin: 1 10 0 30
+
+  ManaBar
+    id: manaBar
+    anchors.top: healthBar.bottom
+    anchors.left: outfitBox.right
+    margin-top: 13
+
+  Label
+    id: manaLabel
+    font: terminus-10px
+    anchors.top: prev.top
+    anchors.left: prev.right
+    margin: 1 0 0 10
+
