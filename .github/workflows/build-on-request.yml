@@ -16,29 +16,40 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Setup vcpkg
-      uses: lukka/run-vcpkg@v11
-      with:
-        vcpkgGitCommitId: 'a42af01b72c28a8e1d7b48107b33e4f286a55ef6'
-
-    - name: Install dependencies
+    - name: Clone vcpkg
       run: |
-        & "$env:VCPKG_ROOT\vcpkg" install --triplet x86-windows-static boost-iostreams boost-asio boost-beast boost-system boost-variant boost-lockfree boost-process boost-program-options boost-uuid boost-filesystem luajit glew physfs openal-soft libogg libvorbis zlib libzip bzip2 openssl
-      shell: pwsh
+        git clone https://github.com/microsoft/vcpkg.git C:\vcpkg
+        cd C:\vcpkg
+        git checkout 3b3bd424827a1f7f4813216f6b32b6c61e386b2e
+        .\bootstrap-vcpkg.bat -disableMetrics
+      shell: cmd
+
+    - name: Cache vcpkg packages
+      uses: actions/cache@v4
+      with:
+        path: C:\vcpkg\installed
+        key: vcpkg-x86-windows-static-${{ hashFiles('**/settings.props') }}
+        restore-keys: vcpkg-x86-windows-static-
+
+    - name: Install vcpkg packages
+      run: |
+        C:\vcpkg\vcpkg install --triplet x86-windows-static boost-iostreams boost-asio boost-beast boost-system boost-variant boost-lockfree boost-process boost-program-options boost-uuid boost-filesystem luajit glew physfs openal-soft libogg libvorbis zlib libzip bzip2 openssl
+        C:\vcpkg\vcpkg integrate install
+      shell: cmd
 
     - name: Compile otclient_dx
       timeout-minutes: 30
       run: |
         cd vc16
-        MSBuild /property:Configuration=DirectX /p:BUILD_REVISION=${{github.run_number}} /p:ForceImportBeforeCppTargets="$env:VCPKG_ROOT\scripts\buildsystems\msbuild\vcpkg.props"
-      shell: pwsh
+        MSBuild /property:Configuration=DirectX /p:BUILD_REVISION=${{github.run_number}} /p:VcpkgRoot=C:\vcpkg
+      shell: cmd
 
     - name: Compile otclient_gl
       timeout-minutes: 30
       run: |
         cd vc16
-        MSBuild /property:Configuration=OpenGL /p:BUILD_REVISION=${{github.run_number}} /p:ForceImportBeforeCppTargets="$env:VCPKG_ROOT\scripts\buildsystems\msbuild\vcpkg.props"
-      shell: pwsh
+        MSBuild /property:Configuration=OpenGL /p:BUILD_REVISION=${{github.run_number}} /p:VcpkgRoot=C:\vcpkg
+      shell: cmd
 
     - name: Upload binaries
       uses: actions/upload-artifact@v4
