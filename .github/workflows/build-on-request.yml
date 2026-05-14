@@ -27,7 +27,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: C:\vcpkg\installed
-        key: vcpkg-x86-static-v2
+        key: vcpkg-x86-static-v3
         restore-keys: vcpkg-x86-static-
 
     - name: Install vcpkg packages
