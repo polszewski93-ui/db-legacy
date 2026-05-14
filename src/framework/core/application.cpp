@@ -34,8 +34,12 @@
 #include <framework/http/http.h>
 
 #if not(defined(ANDROID) || defined(FREE_VERSION))
-#define BOOST_PROCESS_V1
-#include <boost/process.hpp>
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#include <sys/wait.h>
+#endif
 #endif
 
 #include <locale>
@@ -184,12 +188,19 @@ void Application::close()
 void Application::restart()
 {
 #if not(defined(ANDROID) || defined(FREE_VERSION))
-    boost::process::child c(g_resources.getBinaryName());
-    std::error_code ec2;
-    if (c.wait_for(std::chrono::seconds(1), ec2)) {
-        g_logger.fatal("Updater restart error. Please restart application");
-    }
-    c.detach();
+#ifdef _WIN32
+    STARTUPINFOA si = {};
+    PROCESS_INFORMATION pi = {};
+    si.cb = sizeof(si);
+    std::string bin = g_resources.getBinaryName();
+    CreateProcessA(bin.c_str(), NULL, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
+#else
+    std::string bin = g_resources.getBinaryName();
+    pid_t pid = fork();
+    if (pid == 0) { execl(bin.c_str(), bin.c_str(), nullptr); _exit(1); }
+#endif
     quick_exit();
 #else
     exit();
@@ -199,12 +210,28 @@ void Application::restart()
 void Application::restartArgs(const std::vector<std::string>& args)
 {
 #if not(defined(ANDROID) || defined(FREE_VERSION))
-    boost::process::child c(g_resources.getBinaryName(), boost::process::args(args));
-    std::error_code ec2;
-    if (c.wait_for(std::chrono::seconds(1), ec2)) {
-        g_logger.fatal("Updater restart error. Please restart application");
+#ifdef _WIN32
+    STARTUPINFOA si = {};
+    PROCESS_INFORMATION pi = {};
+    si.cb = sizeof(si);
+    std::string bin = g_resources.getBinaryName();
+    std::string cmd = bin;
+    for (const auto& a : args) { cmd += " " + a; }
+    std::vector<char> cmdBuf(cmd.begin(), cmd.end()); cmdBuf.push_back(0);
+    CreateProcessA(NULL, cmdBuf.data(), NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
+#else
+    std::string bin = g_resources.getBinaryName();
+    pid_t pid = fork();
+    if (pid == 0) {
+        std::vector<const char*> argv;
+        argv.push_back(bin.c_str());
+        for (const auto& a : args) argv.push_back(a.c_str());
+        argv.push_back(nullptr);
+        execv(bin.c_str(), const_cast<char* const*>(argv.data())); _exit(1);
     }
-    c.detach();
+#endif
     quick_exit();
 #else
     exit();

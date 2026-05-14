@@ -33,8 +33,12 @@
 #include <regex>
 
 #if not(defined(ANDROID) || defined(FREE_VERSION))
-#define BOOST_PROCESS_V1
-#include <boost/process.hpp>
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#include <sys/wait.h>
+#endif
 #endif
 #include <locale>
 #include <zlib.h>
@@ -129,14 +133,28 @@ bool ResourceManager::launchCorrect(const std::string& product, const std::strin
     if (binary == m_binaryPath)
         return false;
 
-    boost::process::child c(binary.string());
-    std::error_code ec2;
-    if (c.wait_for(std::chrono::seconds(5), ec2)) {
-        return c.exit_code() == 0;
-    }
-
-    c.detach();
-    return true;
+#ifdef _WIN32
+    STARTUPINFOA si = {};
+    PROCESS_INFORMATION pi = {};
+    si.cb = sizeof(si);
+    std::string binStr = binary.string();
+    if (!CreateProcessA(binStr.c_str(), NULL, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi))
+        return false;
+    DWORD exit_code = 1;
+    WaitForSingleObject(pi.hProcess, 5000);
+    GetExitCodeProcess(pi.hProcess, &exit_code);
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
+    return exit_code == 0;
+#else
+    std::string binStr = binary.string();
+    pid_t pid = fork();
+    if (pid == 0) { execl(binStr.c_str(), binStr.c_str(), nullptr); _exit(1); }
+    if (pid < 0) return false;
+    int status = 0;
+    waitpid(pid, &status, 0);
+    return WIFEXITED(status) && WEXITSTATUS(status) == 0;
+#endif
 #else
     return false;
 #endif
