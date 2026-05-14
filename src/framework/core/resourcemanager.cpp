@@ -33,6 +33,7 @@
 #include <regex>
 
 #if not(defined(ANDROID) || defined(FREE_VERSION))
+#define BOOST_PROCESS_V1
 #include <boost/process.hpp>
 #endif
 #include <locale>
