@@ -802,6 +802,7 @@
     <ClCompile Include="..\src\framework\proxy\proxy_client.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_lib|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DirectX|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\src\framework\sound\combinedsoundsource.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_lib|Win32'">false</ExcludedFromBuild>
