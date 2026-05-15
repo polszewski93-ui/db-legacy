@@ -53,7 +53,7 @@ void Connection::poll()
 {
     AutoStat s(STATS_MAIN, "PollConnection");
     // reset must always be called prior to poll
-    g_ioService.reset();
+    g_ioService.restart();
     g_ioService.poll();
 }
 
