@@ -45,8 +45,8 @@ jobs:
       timeout-minutes: 60
       run: |
         cd vc16
-        MSBuild /property:Configuration=DirectX /p:BUILD_REVISION=${{github.run_number}}
-        MSBuild /property:Configuration=OpenGL /p:BUILD_REVISION=${{github.run_number}}
+        MSBuild /property:Configuration=DirectX /p:BUILD_REVISION=${{github.run_number}} /p:ForceImportBeforeCppTargets=${{ runner.workspace }}\vcpkg\scripts\buildsystems\msbuild\vcpkg.props
+        MSBuild /property:Configuration=OpenGL /p:BUILD_REVISION=${{github.run_number}} /p:ForceImportBeforeCppTargets=${{ runner.workspace }}\vcpkg\scripts\buildsystems\msbuild\vcpkg.props
 
     #- name: Sign binaries
     #  run: |
